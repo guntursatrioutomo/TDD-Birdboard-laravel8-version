@@ -21,7 +21,7 @@ class ProjectController extends Controller
             'descriptions' => 'required',
         ]);
 
-        Project::create(\request(['title','descriptions']));
+        Project::create($attributes);
 
         return \redirect('/projects');
     }
