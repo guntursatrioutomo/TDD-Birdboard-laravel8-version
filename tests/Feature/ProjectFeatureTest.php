@@ -12,6 +12,29 @@ class ProjectFeatureTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
+
+        /** @test */
+        public function oguest_cannot_create_project()
+        {
+            // $this->withoutExceptionHandling();
+            $attributes = Project::factory()->raw();
+            $this->post('/projects',$attributes)->assertRedirect('login');
+        }
+
+        /** @test */
+        public function Gues_cannot_view_project()
+        {
+          
+            $this->get('/projects')->assertRedirect('login');
+        }
+
+         /** @test */
+         public function Gues_cannot_view_a_singgel_project()
+         {
+            $project =Project::factory()->create();
+             $this->get($project->path())->assertRedirect('login');
+         }
+    
     /** @test */
     public function it_can_create_project()     
     {
@@ -55,15 +78,27 @@ class ProjectFeatureTest extends TestCase
     }
 
     /** @test */
-    public function it_can_show_project()
+    public function a_user_can_view_their_project()
     {
-        
-        $this->withoutExceptionHandling();
-
-        $project = Project::factory()->create();
-
+        $this->be(User::factory()->create());
+       
+        // $this->withoutExceptionHandling();
+        $project = Project::factory()->create(['owner_id' => \auth()->id()]);
         $this->get($project->path())
         ->assertSee($project->title)
         ->assertSee($project->descriptions);
     }
+
+       /** @test */
+       public function un_autenticated_user_cannot_view_their_project_of_other()
+       {
+           $this->be(User::factory()->create());
+          
+   
+           $project = Project::factory()->create();
+   
+           $this->get($project->path())
+           ->assertStatus(403);
+           
+       }
 }
