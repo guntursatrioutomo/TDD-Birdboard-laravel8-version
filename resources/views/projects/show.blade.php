@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>GunBoard</title>
+    <title>SHOW</title>
 </head>
 <body>
-    @foreach ($projects as $project)
-    <a href="{{ $project->path() }}"><li>{{ $project->title }}</li></a>    
-    
-    @endforeach
+    <h1>{{ $project->title }}</h1>
+    <p>{{ $project->descriptions }}</p>
 </body>
 </html>
